@@ -9,15 +9,17 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
+interface BlogData {
+  id: number;
+  title: string;
+  content: string;
+  image_url: string | null;
+}
+
 interface BlogFormProps {
   onAdded: () => void;
-  editData?: {
-    id: number;
-    title: string;
-    content: string;
-    image_url: string | null;
-  };
-  onClose?: () => void; // untuk mode edit
+  editData?: BlogData;
+  onClose?: () => void; // opsional untuk mode edit
 }
 
 export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) {
@@ -26,7 +28,7 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // jika editData berubah, update state
+  // Update state jika editData berubah
   useEffect(() => {
     if (editData) {
       setTitle(editData.title);
@@ -47,6 +49,7 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
     let imageUrl = editData?.image_url || null;
 
     try {
+      // Upload gambar jika ada
       if (file) {
         const compressedFile = await imageCompression(file, {
           maxSizeMB: 1,
@@ -69,16 +72,16 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
       }
 
       if (editData) {
-        // update
-        const { error: updateError } = await supabase
+        // Update artikel
+        const { error } = await supabase
           .from("blogs")
           .update({ title, content, image_url: imageUrl })
           .eq("id", editData.id);
 
-        if (updateError) throw updateError;
+        if (error) throw error;
       } else {
-        // insert baru
-        const { error: insertError } = await supabase.from("blogs").insert([
+        // Tambah artikel baru
+        const { error } = await supabase.from("blogs").insert([
           {
             title,
             content,
@@ -86,17 +89,18 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
           },
         ]);
 
-        if (insertError) throw insertError;
+        if (error) throw error;
       }
 
+      // Reset form
       setTitle("");
       setContent("");
       setFile(null);
-      onAdded(); // refresh list
-      onClose?.();
-    } catch (err: any) {
-      console.error("❌ Gagal menyimpan artikel:", err.message);
-      alert("Gagal menyimpan artikel");
+      onAdded(); // trigger refresh list
+      onClose?.(); // tutup form jika edit
+    } catch (err) {
+      console.error("❌ Gagal menyimpan artikel:", err);
+      alert("Gagal menyimpan artikel. Cek console untuk detail.");
     } finally {
       setLoading(false);
     }

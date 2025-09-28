@@ -1,11 +1,17 @@
+"use client";
+
+import Image from "next/image";
+
 export default function Hero() {
   return (
     <section className="min-h-screen relative w-screen h-[80vh] overflow-hidden">
       {/* Background image full */}
-      <img
+      <Image
         src="/assets/hero.webp"
         alt="Ilustrasi sekolah"
-        className="absolute top-0 left-0 w-full h-full object-cover"
+        fill
+        className="absolute top-0 left-0 object-cover"
+        priority
       />
 
       {/* Overlay gelap supaya teks lebih jelas */}
