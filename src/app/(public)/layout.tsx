@@ -1,11 +1,12 @@
-// layout.tsx
 import type { Metadata } from "next";
+import "../globals.css";
 import { Plus_Jakarta_Sans } from "next/font/google";
-import "./globals.css";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-const jakartaSans = Plus_Jakarta_Sans({
-  variable: "--font-jakarta-sans",
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
+  variable: "--font-jakarta",
   display: "swap",
 });
 
@@ -16,15 +17,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${jakartaSans.variable} antialiased`}
-      >
-        {children}
+    <html lang="id" className={jakarta.variable}>
+      <body className="antialiased font-sans">
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
