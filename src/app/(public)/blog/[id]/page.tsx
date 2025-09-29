@@ -3,13 +3,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export default async function BlogDetailPage({ params }: { params: { id: string } }) {
+interface BlogPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function BlogDetailPage({ params }: BlogPageProps) {
   const blogId = Number(params.id);
 
   const { data: blog, error } = await supabase
