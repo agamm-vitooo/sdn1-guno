@@ -28,7 +28,7 @@ export default function BlogList({ refresh }: BlogListProps) {
 
   const fetchBlogs = async () => {
     const { data, error } = await supabase
-      .from<Blog>("blogs")
+      .from("blogs")
       .select("*")
       .order("id", { ascending: false });
 
