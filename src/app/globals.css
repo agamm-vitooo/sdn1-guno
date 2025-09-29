@@ -6,6 +6,10 @@
   font-size: 15px; /* ⬅️ perkecil font dasar */
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

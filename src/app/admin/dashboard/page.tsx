@@ -1,41 +1,75 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
-import { User } from "@supabase/supabase-js"; // import tipe User
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
-export default function DashboardPage() {
-  const router = useRouter();
-  const [user, setUser] = useState<User | null>(null); // ganti any dengan User | null
+export default function LandingVisitorsChart() {
+  const [data, setData] = useState<{ date: string; count: number }[]>([]);
+  const [greeting, setGreeting] = useState("");
 
   useEffect(() => {
-    const checkUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+    // Fetch data pengunjung
+    fetch("/api/visitors")
+      .then((res) => res.json())
+      .then((res) => {
+        const chartData = Object.entries(res).map(([date, count]) => ({
+          date,
+          count: count as number,
+        }));
+        setData(chartData);
+      });
 
-      if (!user) {
-        router.push("/login"); 
-      } else {
-        setUser(user);
-      }
-    };
+    // Tentukan sapaan
+    const hour = new Date().getHours();
+    if (hour >= 4 && hour < 11) {
+      setGreeting("Selamat Pagi, Admin 👋");
+    } else if (hour >= 11 && hour < 15) {
+      setGreeting("Selamat Siang, Admin ☀️");
+    } else if (hour >= 15 && hour < 18) {
+      setGreeting("Selamat Sore, Admin 🌅");
+    } else {
+      setGreeting("Selamat Malam, Admin 🌙");
+    }
+  }, []);
 
-    checkUser();
-  }, [router]);
-
-  if (!user) {
-    return <p className="text-center py-10">Memeriksa sesi login...</p>;
-  }
+  const chartOptions: Highcharts.Options = {
+    chart: {
+      type: "line",
+      backgroundColor: "#fff",
+    },
+    title: {
+      text: "Statistik Pengunjung Landing Page",
+    },
+    xAxis: {
+      categories: data.map((d) => d.date),
+      title: { text: "Tanggal" },
+    },
+    yAxis: {
+      title: { text: "Jumlah Pengunjung" },
+      allowDecimals: false,
+    },
+    series: [
+      {
+        name: "Landing Page",
+        data: data.map((d) => d.count),
+        type: "line",
+        color: "#16a34a",
+      },
+    ],
+    tooltip: {
+      shared: true,
+      valueSuffix: " kunjungan",
+    },
+    credits: {
+      enabled: false,
+    },
+  };
 
   return (
-    <section className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Dashboard Admin</h1>
-        </div>
-      </div>
-    </section>
+    <div className="bg-white rounded-xl shadow p-6">
+      <h2 className="text-lg font-semibold mb-4">{greeting}</h2>
+      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
+    </div>
   );
 }
