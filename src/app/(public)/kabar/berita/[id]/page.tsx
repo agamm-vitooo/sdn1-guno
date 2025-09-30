@@ -34,7 +34,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
       <div className="max-w-4xl mx-auto px-6">
         {/* Back Button */}
         <Link
-          href="/blog"
+          href="/kabar/berita"
           className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium mb-8 transition-colors duration-200 group"
         >
           <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -95,7 +95,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
         {/* Bottom Navigation */}
         <div className="mt-8 flex justify-between items-center">
           <Link
-            href="/blog"
+            href="/kabar/berita"
             className="inline-flex items-center gap-2 text-white bg-green-600 hover:bg-green-700 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

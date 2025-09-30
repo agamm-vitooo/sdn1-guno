@@ -108,7 +108,7 @@ export default async function BlogSection() {
       {blogs.length === 3 && (
         <div className="text-center mt-12">
           <Link
-            href="/blog"
+            href="/kabar/berita"
             className="inline-flex items-center gap-2 text-green-600 hover:text-green-700 font-semibold text-lg group"
           >
             <span>Lihat semua artikel</span>
