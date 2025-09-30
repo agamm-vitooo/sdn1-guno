@@ -19,7 +19,7 @@ interface BlogData {
 interface BlogFormProps {
   onAdded: () => void;
   editData?: BlogData;
-  onClose?: () => void; // opsional untuk mode edit
+  onClose?: () => void;
 }
 
 export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) {
@@ -28,7 +28,6 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Update state jika editData berubah
   useEffect(() => {
     if (editData) {
       setTitle(editData.title);
@@ -49,13 +48,24 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
     let imageUrl = editData?.image_url || null;
 
     try {
-      // Upload gambar jika ada
       if (file) {
+        // 🔹 Kompres otomatis dengan target maksimal 200 KB
         const compressedFile = await imageCompression(file, {
-          maxSizeMB: 1,
+          maxSizeMB: 0.2, // 200 KB
           maxWidthOrHeight: 1024,
           useWebWorker: true,
         });
+
+        console.log(
+          `📦 Before: ${(file.size / 1024).toFixed(1)} KB | After: ${(compressedFile.size / 1024).toFixed(1)} KB`
+        );
+
+        // 🔹 Validasi setelah kompres
+        if (compressedFile.size > 200 * 1024) {
+          alert("Ukuran gambar masih lebih dari 200 KB setelah dikompres. Gunakan gambar lain.");
+          setLoading(false);
+          return;
+        }
 
         const fileName = `${Date.now()}-${compressedFile.name}`;
         const { error: uploadError } = await supabase.storage
@@ -72,7 +82,6 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
       }
 
       if (editData) {
-        // Update artikel
         const { error } = await supabase
           .from("blogs")
           .update({ title, content, image_url: imageUrl })
@@ -80,7 +89,6 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
 
         if (error) throw error;
       } else {
-        // Tambah artikel baru
         const { error } = await supabase.from("blogs").insert([
           {
             title,
@@ -92,12 +100,11 @@ export default function BlogForm({ onAdded, editData, onClose }: BlogFormProps) 
         if (error) throw error;
       }
 
-      // Reset form
       setTitle("");
       setContent("");
       setFile(null);
-      onAdded(); // trigger refresh list
-      onClose?.(); // tutup form jika edit
+      onAdded();
+      onClose?.();
     } catch (err) {
       console.error("❌ Gagal menyimpan artikel:", err);
       alert("Gagal menyimpan artikel. Cek console untuk detail.");

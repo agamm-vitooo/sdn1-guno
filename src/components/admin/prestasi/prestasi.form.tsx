@@ -35,58 +35,66 @@ export default function PrestasiForm({ onSaved, editData, onClose }: PrestasiFor
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title) return alert("Judul prestasi wajib!");
-    setLoading(true);
-    let imageUrl = editData?.image_url || null;
+  e.preventDefault();
+  if (!title) return alert("Judul prestasi wajib!");
+  setLoading(true);
+  let imageUrl = editData?.image_url || null;
 
-    try {
-      if (file) {
-        const compressedFile = await imageCompression(file, {
-          maxSizeMB: 0.5,
-          maxWidthOrHeight: 1024,
-        });
-        const fileName = `${Date.now()}-${compressedFile.name}`;
-        const { error: uploadError } = await supabase.storage
-          .from("blog-images")
-          .upload(fileName, compressedFile, { upsert: true });
-        if (uploadError) throw uploadError;
+  try {
+    if (file) {
+      // 🔹 Kompres otomatis dengan target max 200 KB
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 0.2, // 200 KB
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      });
 
-        const { data: publicUrl } = supabase.storage
-          .from("blog-images")
-          .getPublicUrl(fileName);
-        imageUrl = publicUrl.publicUrl;
-      }
+      console.log(
+        `📦 Before: ${(file.size / 1024).toFixed(1)} KB | After: ${(compressedFile.size / 1024).toFixed(1)} KB`
+      );
 
-      if (editData) {
-        const { error } = await supabase
-          .from("prestasi")
-          .update({ title, description, image_url: imageUrl })
-          .eq("id", editData.id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from("prestasi")
-          .insert([{ title, description, image_url: imageUrl }]);
-        if (error) throw error;
-      }
+      const fileName = `${Date.now()}-${compressedFile.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("blog-images")
+        .upload(fileName, compressedFile, { upsert: true });
 
-      setTitle("");
-      setDescription("");
-      setFile(null);
-      onSaved();
-      onClose?.();
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error("❌ Gagal menyimpan prestasi:", err.message);
-      } else {
-        console.error("❌ Gagal menyimpan prestasi:", err);
-      }
-      alert("Gagal menyimpan prestasi. Cek console.");
-    } finally {
-      setLoading(false);
+      if (uploadError) throw uploadError;
+
+      const { data: publicUrl } = supabase.storage
+        .from("blog-images")
+        .getPublicUrl(fileName);
+      imageUrl = publicUrl.publicUrl;
     }
-  };
+
+    if (editData) {
+      const { error } = await supabase
+        .from("prestasi")
+        .update({ title, description, image_url: imageUrl })
+        .eq("id", editData.id);
+      if (error) throw error;
+    } else {
+      const { error } = await supabase
+        .from("prestasi")
+        .insert([{ title, description, image_url: imageUrl }]);
+      if (error) throw error;
+    }
+
+    setTitle("");
+    setDescription("");
+    setFile(null);
+    onSaved();
+    onClose?.();
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("❌ Gagal menyimpan prestasi:", err.message);
+    } else {
+      console.error("❌ Gagal menyimpan prestasi:", err);
+    }
+    alert("Gagal menyimpan prestasi. Cek console.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <form
