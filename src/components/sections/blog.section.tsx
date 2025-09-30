@@ -91,7 +91,7 @@ export default async function BlogSection() {
               </p>
 
               <Link
-                href={`/blog/${blog.id}`}
+                href={`/kabar/berita/${blog.id}`}
                 className="inline-flex items-center justify-center gap-2 text-white bg-green-600 hover:bg-green-700 font-medium py-3 px-5 rounded-xl transition-all duration-200 group-hover:gap-3 shadow-md hover:shadow-lg"
               >
                 <span>Baca Selengkapnya</span>

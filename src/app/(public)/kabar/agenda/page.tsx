@@ -3,32 +3,83 @@ import Image from "next/image";
 
 export default async function AgendaPage() {
   const { data: agendas } = await supabase
-    .from("agenda")
+    .from("agendas")
     .select("*")
-    .order("date", { ascending: true });
+    .order("created_at", { ascending: true });
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Agenda</h1>
-      <ul className="space-y-4">
-        {agendas?.map((agenda) => (
-          <li key={agenda.id} className="border p-4 rounded shadow-sm">
-            <h2 className="font-semibold text-xl">{agenda.title}</h2>
-            <p className="text-gray-700">{agenda.description}</p>
-            <p className="text-sm text-gray-500 mt-1">{agenda.date}</p>
-            {agenda.image_url && (
-              <div className="relative w-64 h-40 mt-2">
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${agenda.image_url}`}
-                  alt={agenda.title}
-                  fill
-                  className="object-cover rounded"
-                />
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <section className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-20">
+      <div className="max-w-5xl mx-auto px-6">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4 text-gray-900">Agenda Sekolah</h1>
+          <p className="text-gray-600 text-lg">Jadwal kegiatan dan acara sekolah</p>
+        </div>
+
+        {/* Agenda List */}
+        {!agendas || agendas.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="text-gray-500 text-xl font-semibold">Belum ada agenda</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {agendas?.map((agenda) => (
+              <article
+                key={agenda.id}
+                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100"
+              >
+                <div className="flex flex-col md:flex-row">
+                  {/* Image Section */}
+                  {agenda.image_url && (
+                    <div className="relative w-full md:w-72 h-56 md:h-auto bg-gray-100 flex-shrink-0">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blog-images/agendas/${agenda.image_url?.split('/').pop()}`}
+                        alt={agenda.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {/* Content Section */}
+                  <div className="p-6 md:p-8 flex-1">
+                    {/* Date Badge */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span className="text-sm font-medium">
+                          {new Date(agenda.created_at).toLocaleDateString("id-ID", {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                      {agenda.title}
+                    </h2>
+
+                    {/* Description */}
+                    <p className="text-gray-600 leading-relaxed">
+                      {agenda.description}
+                    </p>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

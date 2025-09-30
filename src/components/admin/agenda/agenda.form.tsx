@@ -3,22 +3,19 @@
 import { useState } from "react";
 import imageCompression from "browser-image-compression";
 import { supabase } from "@/lib/supabaseClient";
+import { Agenda } from "./agenda.list";
 
 interface AgendaFormProps {
   onSaved: () => void;
-  editData?: {
-    id: number;
-    title: string;
-    description: string;
-    date: string;
-    image_url: string | null;
-  };
+  editData?: Agenda;
 }
 
 export default function AgendaForm({ onSaved, editData }: AgendaFormProps) {
   const [title, setTitle] = useState(editData?.title || "");
   const [description, setDescription] = useState(editData?.description || "");
-  const [date, setDate] = useState(editData?.date || "");
+  const [createdAt, setCreatedAt] = useState(
+    editData?.created_at?.split("T")[0] || ""
+  );
   const [image, setImage] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,11 +25,9 @@ export default function AgendaForm({ onSaved, editData }: AgendaFormProps) {
 
     if (image) {
       try {
-        // Kompres gambar
         const options = { maxSizeMB: 0.2, maxWidthOrHeight: 1200 };
         const compressedFile = await imageCompression(image, options);
 
-        // Validasi ukuran
         if (compressedFile.size > 200 * 1024) {
           alert("Ukuran gambar masih lebih dari 200KB. Upload dibatalkan.");
           return;
@@ -40,7 +35,7 @@ export default function AgendaForm({ onSaved, editData }: AgendaFormProps) {
 
         const fileExt = image.name.split(".").pop();
         const fileName = `${Date.now()}.${fileExt}`;
-        const filePath = `agenda/${fileName}`;
+        const filePath = `agendas/${fileName}`;
 
         const { error: uploadError } = await supabase.storage
           .from("blog-images")
@@ -60,18 +55,28 @@ export default function AgendaForm({ onSaved, editData }: AgendaFormProps) {
 
     if (editData?.id) {
       await supabase
-        .from("agenda")
-        .update({ title, description, date, image_url: imageUrl })
+        .from("agendas")
+        .update({
+          title,
+          description,
+          created_at: createdAt ? new Date(createdAt).toISOString() : null,
+          image_url: imageUrl,
+        })
         .eq("id", editData.id);
     } else {
-      await supabase
-        .from("agenda")
-        .insert([{ title, description, date, image_url: imageUrl }]);
+      await supabase.from("agendas").insert([
+        {
+          title,
+          description,
+          created_at: createdAt ? new Date(createdAt).toISOString() : null,
+          image_url: imageUrl,
+        },
+      ]);
     }
 
     setTitle("");
     setDescription("");
-    setDate("");
+    setCreatedAt("");
     setImage(null);
     onSaved();
   };
@@ -94,10 +99,9 @@ export default function AgendaForm({ onSaved, editData }: AgendaFormProps) {
       />
       <input
         type="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
+        value={createdAt}
+        onChange={(e) => setCreatedAt(e.target.value)}
         className="border px-3 py-2 rounded w-full"
-        required
       />
       <input
         type="file"

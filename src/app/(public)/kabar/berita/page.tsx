@@ -149,7 +149,7 @@ export default function BlogPage() {
                     </div>
 
                     <Link
-                      href={`/blog/${blog.id}`}
+                      href={`/kabar/berita/${blog.id}`}
                       className="inline-flex items-center justify-center gap-2 w-full sm:w-auto text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 font-semibold py-3 px-6 rounded-xl"
                     >
                       <span>Baca Selengkapnya</span>

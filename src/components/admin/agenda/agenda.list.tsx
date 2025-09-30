@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 
-interface Agenda {
+export interface Agenda {
   id: number;
   title: string;
   description: string;
-  date: string;
+  created_at: string;
   image_url: string | null;
 }
 
@@ -26,14 +26,14 @@ export default function AgendaList({ onEdit, refresh }: AgendaListProps) {
 
   const fetchAgendas = async () => {
     const { data } = await supabase
-      .from("agenda")
+      .from("agendas")
       .select("*")
-      .order("date", { ascending: true });
+      .order("created_at", { ascending: true });
     setAgendas(data || []);
   };
 
   const handleDelete = async (id: number) => {
-    await supabase.from("agenda").delete().eq("id", id);
+    await supabase.from("agendas").delete().eq("id", id);
     fetchAgendas();
   };
 
@@ -47,11 +47,13 @@ export default function AgendaList({ onEdit, refresh }: AgendaListProps) {
           <div>
             <h2 className="font-bold">{agenda.title}</h2>
             <p>{agenda.description}</p>
-            <p className="text-sm text-gray-500">{agenda.date}</p>
+            <p className="text-sm text-gray-500">
+              {new Date(agenda.created_at).toLocaleDateString("id-ID")}
+            </p>
             {agenda.image_url && (
               <div className="mt-2 w-32 relative aspect-square">
                 <Image
-                  src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${agenda.image_url}`}
+                  src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blog-images/agendas/${agenda.image_url?.split('/').pop()}`}
                   alt={agenda.title}
                   fill
                   className="rounded object-cover"
