@@ -95,7 +95,6 @@ export default function NavbarPublic() {
                   <Link href="/tentang/fasilitas" className="block px-4 py-2 text-gray-700 hover:bg-blue-50">🏫 Fasilitas</Link>
                   <Link href="/tentang/ekstrakurikuler" className="block px-4 py-2 text-gray-700 hover:bg-blue-50">⚽ Daftar Ekstrakurikuler</Link>
                   <Link href="/tentang/struktur" className="block px-4 py-2 text-gray-700 hover:bg-blue-50">👥 Struktur Organisasi</Link>
-                  <Link href="/tentang/mars" className="block px-4 py-2 text-gray-700 hover:bg-blue-50">🎵 Mars SDN 1 Guno</Link>
                 </div>
               )}
             </div>
@@ -198,7 +197,6 @@ export default function NavbarPublic() {
                   <Link href="/tentang/fasilitas" className="block px-4 py-2 text-gray-700 hover:bg-blue-50">🏫 Fasilitas</Link>
                   <Link href="/tentang/ekstrakurikuler" className="block px-4 py-2 text-gray-700 hover:bg-blue-50">⚽ Daftar Ekstrakurikuler</Link>
                   <Link href="/tentang/struktur" className="block px-4 py-2 text-gray-700 hover:bg-blue-50">👥 Struktur Organisasi</Link>
-                  <Link href="/tentang/mars" className="block px-4 py-2 text-gray-700 hover:bg-blue-50">🎵 Mars SDN 1 Guno</Link>
                 </div>
               )}
 

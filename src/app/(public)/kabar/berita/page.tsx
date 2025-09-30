@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -24,9 +24,10 @@ export default function BlogPage() {
   const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔎 Fetch blogs (filtered by date if provided)
-  const fetchBlogs = async () => {
+  // 🔎 Fetch blogs (pakai useCallback agar aman dipakai di useEffect)
+  const fetchBlogs = useCallback(async () => {
     setLoading(true);
+
     let query = supabase.from("blogs").select("*").order("id", { ascending: false });
 
     if (startDate && endDate) {
@@ -37,11 +38,12 @@ export default function BlogPage() {
     if (error) console.error("❌ Gagal fetch blogs:", error.message);
     setBlogs(data || []);
     setLoading(false);
-  };
+  }, [startDate, endDate]);
 
+  // 🌀 Load data pertama kali
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [fetchBlogs]);
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-20">

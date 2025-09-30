@@ -21,7 +21,7 @@ export default function SidebarAdmin({ isOpen, onClose }: SidebarProps) {
       submenu: [
         { name: "Berita", href: "/admin/kabar/berita" },
         { name: "Agenda", href: "/admin/kabar/agenda" },
-        { name: "Prestasi", href: "/kabar/prestasi" },
+        { name: "Prestasi", href: "/admin/kabar/prestasi" },
         { name: "Pengumuman", href: "/kabar/pengumuman" },
         { name: "Galeri", href: "/kabar/galeri" },
       ],
