@@ -8,10 +8,17 @@ const supabase = createClient(
 );
 
 export default async function BlogSection() {
-  const { data: blogs } = await supabase
+  // Ambil 3 artikel terbaru berdasarkan created_at
+  const { data: blogs, error } = await supabase
     .from("blogs")
     .select("*")
-    .order("id", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(3);
+
+  if (error) {
+    console.error(error);
+    return <p>Terjadi kesalahan saat memuat artikel.</p>;
+  }
 
   if (!blogs || blogs.length === 0) {
     return (
@@ -33,22 +40,17 @@ export default async function BlogSection() {
     );
   }
 
-  // Ambil 3 artikel terbaru
-  const latestBlogs = blogs.slice(0, 3);
-
   return (
     <section className="max-w-7xl mx-auto p-6 py-20">
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold mb-4 text-gray-900">
-          Artikel Sekolah
-        </h2>
+        <h2 className="text-4xl font-bold mb-4 text-gray-900">Artikel Sekolah</h2>
         <p className="text-gray-600 max-w-2xl mx-auto">
           Berita dan informasi terkini dari sekolah kami
         </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {latestBlogs.map((blog) => (
+        {blogs.map((blog) => (
           <div
             key={blog.id}
             className="group bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
@@ -66,7 +68,6 @@ export default async function BlogSection() {
             )}
 
             <div className="p-6 flex-1 flex flex-col">
-              {/* Tampilkan created_at */}
               {blog.created_at && (
                 <div className="flex items-center gap-2 mb-3">
                   <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +105,7 @@ export default async function BlogSection() {
         ))}
       </div>
 
-      {blogs.length > 3 && (
+      {blogs.length === 3 && (
         <div className="text-center mt-12">
           <Link
             href="/blog"
