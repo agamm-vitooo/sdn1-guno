@@ -20,8 +20,18 @@ export default async function AgendaPage() {
         {!agendas || agendas.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <svg
+                className="w-10 h-10 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
               </svg>
             </div>
             <p className="text-gray-500 text-xl font-semibold">Belum ada agenda</p>
@@ -31,17 +41,20 @@ export default async function AgendaPage() {
             {agendas?.map((agenda) => (
               <article
                 key={agenda.id}
-                className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100"
+                className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
               >
                 <div className="flex flex-col md:flex-row">
                   {/* Image Section */}
                   {agenda.image_url && (
                     <div className="relative w-full md:w-72 h-56 md:h-auto bg-gray-100 flex-shrink-0">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blog-images/agendas/${agenda.image_url?.split('/').pop()}`}
+                        src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/blog-images/agendas/${agenda.image_url?.split(
+                          "/"
+                        ).pop()}`}
                         alt={agenda.title}
                         fill
                         className="object-cover"
+                        loading="lazy" // ✅ Lazy loading ditambahkan
                       />
                     </div>
                   )}
@@ -51,8 +64,18 @@ export default async function AgendaPage() {
                     {/* Date Badge */}
                     <div className="flex items-center gap-2 mb-4">
                       <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
                         </svg>
                         <span className="text-sm font-medium">
                           {new Date(agenda.created_at).toLocaleDateString("id-ID", {

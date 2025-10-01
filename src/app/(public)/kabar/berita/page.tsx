@@ -28,7 +28,7 @@ export default function BlogPage() {
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
 
-    let query = supabase.from("blogs").select("*").order("id", { ascending: false });
+    let query = supabase.from("blogs").select("id, title, content, created_at, image_url, is_featured").order("id", { ascending: false });
 
     if (startDate && endDate) {
       query = query.gte("created_at", startDate).lte("created_at", endDate);
@@ -100,7 +100,7 @@ export default function BlogPage() {
           <div className="flex flex-col gap-8">
             {blogs.map((blog) => (
               <article
-                className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100"
+                className="group bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden border border-gray-100"
                 key={blog.id}
               >
                 <div className="flex flex-col lg:flex-row">
@@ -110,9 +110,8 @@ export default function BlogPage() {
                         src={blog.image_url}
                         alt={blog.title}
                         fill
-                        className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
+                        className="object-cover w-full h-full"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                   )}
 
@@ -141,20 +140,22 @@ export default function BlogPage() {
                         </div>
                       )}
 
-                      <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300">
+                      <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4 line-clamp-2">
                         {blog.title}
                       </h3>
 
-                      <p className="text-gray-600 text-base leading-relaxed line-clamp-3 mb-6">{blog.content}</p>
+                      <p className="text-gray-600 text-base leading-relaxed line-clamp-3 mb-6">
+                        {blog.content}
+                      </p>
                     </div>
 
                     <Link
                       href={`/kabar/berita/${blog.id}`}
-                      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 font-semibold py-3 px-6 rounded-xl"
+                      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto text-white bg-green-700 hover:bg-green-800 font-semibold py-3 px-6 rounded-xl"
                     >
                       <span>Baca Selengkapnya</span>
                       <svg
-                        className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-200"
+                        className="w-5 h-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
