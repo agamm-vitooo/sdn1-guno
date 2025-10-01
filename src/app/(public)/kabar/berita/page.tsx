@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@supabase/supabase-js";
+import Pagination from "@/components/pagination";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,23 +25,36 @@ export default function BlogPage() {
   const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // 🔎 Fetch blogs (pakai useCallback agar aman dipakai di useEffect)
+  // 📌 Pagination state
+  const [page, setPage] = useState(1);
+  const limit = 5; // jumlah artikel per halaman
+  const [totalPages, setTotalPages] = useState(1);
+
+  // 🔎 Fetch blogs
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
 
-    let query = supabase.from("blogs").select("id, title, content, created_at, image_url, is_featured").order("id", { ascending: false });
+    let query = supabase
+      .from("blogs")
+      .select("id, title, content, created_at, image_url, is_featured", { count: "exact" })
+      .order("id", { ascending: false });
 
     if (startDate && endDate) {
       query = query.gte("created_at", startDate).lte("created_at", endDate);
     }
 
-    const { data, error } = await query;
-    if (error) console.error("❌ Gagal fetch blogs:", error.message);
-    setBlogs(data || []);
-    setLoading(false);
-  }, [startDate, endDate]);
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
 
-  // 🌀 Load data pertama kali
+    const { data, error, count } = await query.range(from, to);
+    if (error) console.error("❌ Gagal fetch blogs:", error.message);
+
+    setBlogs(data || []);
+    setTotalPages(count ? Math.ceil(count / limit) : 1);
+    setLoading(false);
+  }, [startDate, endDate, page]);
+
+  // 🌀 Load data
   useEffect(() => {
     fetchBlogs();
   }, [fetchBlogs]);
@@ -58,14 +72,20 @@ export default function BlogPage() {
           <input
             type="date"
             value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            onChange={(e) => {
+              setPage(1); // reset page ketika filter berubah
+              setStartDate(e.target.value);
+            }}
             className="border border-gray-300 rounded-lg px-4 py-2 w-full sm:w-auto"
           />
           <span className="text-gray-500">sampai</span>
           <input
             type="date"
             value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
+            onChange={(e) => {
+              setPage(1); // reset page ketika filter berubah
+              setEndDate(e.target.value);
+            }}
             className="border border-gray-300 rounded-lg px-4 py-2 w-full sm:w-auto"
           />
           <button
@@ -79,6 +99,7 @@ export default function BlogPage() {
               onClick={() => {
                 setStartDate("");
                 setEndDate("");
+                setPage(1);
                 fetchBlogs();
               }}
               className="bg-gray-400 text-white px-6 py-2 rounded-lg hover:bg-gray-500 transition"
@@ -168,6 +189,11 @@ export default function BlogPage() {
               </article>
             ))}
           </div>
+        )}
+
+        {/* 📌 Pagination */}
+        {blogs.length > 0 && (
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
         )}
       </div>
     </section>

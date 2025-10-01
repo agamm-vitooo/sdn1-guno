@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { createClient } from "@supabase/supabase-js";
+import Pagination from "@/components/pagination";
 
 interface GaleriData {
   id: number;
@@ -31,7 +32,7 @@ function GaleriCard({ data, isFirst }: { data: GaleriData; isFirst?: boolean }) 
             src={imageUrl}
             alt={data.title || "Foto galeri"}
             fill
-            priority={isFirst} // hanya gambar pertama (LCP) diberi priority
+            priority={isFirst}
             fetchPriority={isFirst ? "high" : "auto"}
             loading={isFirst ? "eager" : "lazy"}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -55,6 +56,10 @@ export default function GaleriPage() {
   const [galeris, setGaleris] = useState<GaleriData[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; // jumlah item per halaman
+
   useEffect(() => {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -77,6 +82,11 @@ export default function GaleriPage() {
     fetchGaleris();
   }, []);
 
+  // ✅ Hitung pagination
+  const totalPages = Math.ceil(galeris.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = galeris.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <section className="min-h-screen bg-gray-50 py-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -98,11 +108,21 @@ export default function GaleriPage() {
             <p className="text-gray-500 text-lg">Belum ada foto dalam galeri</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {galeris.map((g, i) => (
-              <GaleriCard key={g.id} data={g} isFirst={i === 0} />
-            ))}
-          </div>
+          <>
+            {/* Grid Galeri */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {paginatedData.map((g, i) => (
+                <GaleriCard key={g.id} data={g} isFirst={i === 0} />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => setCurrentPage(page)}
+            />
+          </>
         )}
       </div>
     </section>

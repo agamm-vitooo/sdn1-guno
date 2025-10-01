@@ -1,11 +1,52 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
+import Pagination from "@/components/pagination";
 
-export default async function AgendaPage() {
-  const { data: agendas } = await supabase
-    .from("agendas")
-    .select("*")
-    .order("created_at", { ascending: true });
+interface Agenda {
+  id: number;
+  title: string;
+  description: string;
+  image_url?: string | null;
+  created_at: string;
+}
+
+export default function AgendaPage() {
+  const [agendas, setAgendas] = useState<Agenda[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // 📌 Pagination state
+  const [page, setPage] = useState(1);
+  const limit = 5; // jumlah agenda per halaman
+  const [totalPages, setTotalPages] = useState(1);
+
+  // 🔎 Fetch agenda
+  const fetchAgendas = useCallback(async () => {
+    setLoading(true);
+
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, error, count } = await supabase
+      .from("agendas")
+      .select("*", { count: "exact" })
+      .order("created_at", { ascending: true })
+      .range(from, to);
+
+    if (error) {
+      console.error("❌ Gagal fetch agendas:", error.message);
+    }
+
+    setAgendas(data || []);
+    setTotalPages(count ? Math.ceil(count / limit) : 1);
+    setLoading(false);
+  }, [page]);
+
+  useEffect(() => {
+    fetchAgendas();
+  }, [fetchAgendas]);
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-20">
@@ -17,7 +58,9 @@ export default async function AgendaPage() {
         </div>
 
         {/* Agenda List */}
-        {!agendas || agendas.length === 0 ? (
+        {loading ? (
+          <p className="text-center text-gray-500">Memuat agenda...</p>
+        ) : !agendas || agendas.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg
@@ -38,7 +81,7 @@ export default async function AgendaPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {agendas?.map((agenda) => (
+            {agendas.map((agenda) => (
               <article
                 key={agenda.id}
                 className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
@@ -54,7 +97,7 @@ export default async function AgendaPage() {
                         alt={agenda.title}
                         fill
                         className="object-cover"
-                        loading="lazy" // ✅ Lazy loading ditambahkan
+                        loading="lazy"
                       />
                     </div>
                   )}
@@ -88,19 +131,20 @@ export default async function AgendaPage() {
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-2xl font-bold text-gray-900 mb-3">
-                      {agenda.title}
-                    </h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-3">{agenda.title}</h2>
 
                     {/* Description */}
-                    <p className="text-gray-600 leading-relaxed">
-                      {agenda.description}
-                    </p>
+                    <p className="text-gray-600 leading-relaxed">{agenda.description}</p>
                   </div>
                 </div>
               </article>
             ))}
           </div>
+        )}
+
+        {/* 📌 Pagination */}
+        {agendas.length > 0 && (
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
         )}
       </div>
     </section>
