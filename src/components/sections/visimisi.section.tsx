@@ -17,7 +17,7 @@ export default function VisiMisi() {
     const fetchData = async () => {
       const { data, error } = await supabase
         .from("visi_misi")
-        .select("*")
+        .select("id, type, content")
         .order("id", { ascending: true });
       if (error) {
         console.error(error);
@@ -75,9 +75,26 @@ export default function VisiMisi() {
               <h3 className="text-2xl font-bold text-gray-900">Visi</h3>
             </div>
 
-            <div className="text-gray-700 leading-relaxed text-lg space-y-2">
+            <div className="text-gray-700 leading-relaxed space-y-2">
               {visi.length > 0 ? (
-                visi.map((item) => <p key={item.id}>{item.content}</p>)
+                visi.map((item) =>                   <li key={item.id} className="flex items-start gap-3 group/item">
+                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 group-hover/item:bg-blue-500 transition-colors duration-200">
+                      <svg
+                        className="w-3 h-3 text-blue-500 group-hover/item:text-white transition-colors duration-200"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 leading-relaxed">
+                      {item.content}
+                    </span>
+                  </li>)
               ) : (
                 <p className="italic text-gray-400">Belum ada data visi</p>
               )}

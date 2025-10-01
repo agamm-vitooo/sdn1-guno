@@ -22,31 +22,31 @@ export default function PublicPrestasiPage() {
   const [totalPages, setTotalPages] = useState(1);
   const limit = 6; // tampil 6 prestasi per halaman
 
-  const fetchPrestasi = async () => {
-    setLoading(true);
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
-
-    const { data, error, count } = await supabase
-      .from("prestasi")
-      .select("*", { count: "exact" })
-      .order("created_at", { ascending: false })
-      .range(from, to);
-
-    if (error) {
-      console.error(error);
-      setLoading(false);
-      return;
-    }
-
-    setPrestasis(data || []);
-    setTotalPages(Math.ceil((count || 0) / limit));
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const fetchPrestasi = async () => {
+      setLoading(true);
+      const from = (page - 1) * limit;
+      const to = from + limit - 1;
+
+      const { data, error, count } = await supabase
+        .from("prestasi")
+        .select("*", { count: "exact" })
+        .order("created_at", { ascending: false })
+        .range(from, to);
+
+      if (error) {
+        console.error(error);
+        setLoading(false);
+        return;
+      }
+
+      setPrestasis(data || []);
+      setTotalPages(Math.ceil((count || 0) / limit));
+      setLoading(false);
+    };
+
     fetchPrestasi();
-  }, [page]);
+  }, [page, limit]);
 
   return (
     <section className="min-h-screen py-10">
