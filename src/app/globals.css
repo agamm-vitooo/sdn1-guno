@@ -27,5 +27,5 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-jakarta-sans), sans-serif;
-  font-size: 0.90rem; /* ⬅️ lebih kecil dari default 1rem */
+  font-size: 0.85rem; /* ⬅️ lebih kecil dari default 1rem */
 }

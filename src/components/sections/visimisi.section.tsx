@@ -47,7 +47,7 @@ export default function VisiMisi() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Visi */}
-          <div className="group relative bg-white shadow-lg rounded-2xl p-8 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-blue-100">
+          <div className="group relative bg-white rounded-2xl p-8 border border-gray-200 hover:-translate-y-1 transition-all duration-300">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-t-2xl"></div>
 
             <div className="flex items-center gap-3 mb-6">
@@ -104,11 +104,11 @@ export default function VisiMisi() {
           </div>
 
           {/* Misi */}
-          <div className="group relative bg-white shadow-lg rounded-2xl p-8 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-green-100">
+          <div className="group relative bg-white rounded-2xl p-8 hover:-translate-y-1 transition-all duration-300 border border-gray-200">
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-500 to-green-600 rounded-t-2xl"></div>
 
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300">
+              <div className="w-12 h-12 bg-green-200 rounded-xl flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300">
                 <svg
                   className="w-6 h-6 text-green-600 group-hover:text-white transition-colors duration-300"
                   fill="none"

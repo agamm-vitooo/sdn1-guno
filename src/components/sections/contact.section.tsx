@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import { Send } from "lucide-react";
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -56,7 +57,7 @@ export default function ContactSection() {
         
         <div className="grid md:grid-cols-2 gap-8">
           {/* Form */}
-          <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="bg-white p-8 rounded-2xl border border-gray-200 transition-shadow duration-300">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -109,9 +110,19 @@ export default function ContactSection() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 font-medium shadow-md"
+                className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 font-medium shadow-md flex items-center justify-center gap-2"
               >
-                {loading ? "Mengirim..." : "Kirim Pesan"}
+                {loading ? (
+                  <>
+                    <span>Mengirim...</span>
+                    <Send className="w-4 h-4 animate-pulse" />
+                  </>
+                ) : (
+                  <>
+                    <span>Kirim Pesan</span>
+                    <Send className="w-4 h-4" />
+                  </>
+                )}
               </button>
               
               {success && (
@@ -123,7 +134,7 @@ export default function ContactSection() {
           </div>
 
           {/* Maps & Address */}
-          <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+          <div className="bg-white p-8 rounded-2xl transition-shadow border border-gray-200 duration-300">
             <div className="mb-6">
               <h3 className="text-2xl font-semibold text-gray-900 mb-3">Lokasi Kami</h3>
               <div className="flex items-start space-x-3">
@@ -137,7 +148,7 @@ export default function ContactSection() {
               </div>
             </div>
             
-            <div className="h-[320px] rounded-xl overflow-hidden shadow-md">
+            <div className="h-[320px] rounded-xl overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3952.03113213559!2d111.16098957455566!3d-7.891811778508897!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7981bda304c7a1%3A0x5f3d1acff9ef1a03!2sSDN%201%20GUNO!5e0!3m2!1sid!2sid!4v1758978978514!5m2!1sid!2sid"
                 width="100%"
