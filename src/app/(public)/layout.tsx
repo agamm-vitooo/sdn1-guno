@@ -23,10 +23,15 @@ export default function RootLayout({
   return (
     <html lang="id" className={jakarta.variable}>
       <body className="antialiased min-h-screen flex flex-col">
+        {/* Navbar sticky di atas */}
         <Navbar />
+
+        {/* Main isi konten, dorong footer ke bawah */}
         <main className="flex-1 pt-16">
           {children}
         </main>
+
+        {/* Footer selalu di bawah */}
         <Footer />
       </body>
     </html>

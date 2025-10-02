@@ -29,7 +29,7 @@ export default async function BlogSection() {
           </h2>
           <p className="text-gray-600 mb-8">Berita dan informasi terkini dari sekolah kami</p>
         </div>
-        <div className="flex flex-col items-center justify-center py-16 bg-gray-50 rounded-2xl">
+        <div className="flex flex-col items-center justify-center py-16 rounded-2xl">
           <svg className="w-24 h-24 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
           </svg>
@@ -53,10 +53,10 @@ export default async function BlogSection() {
         {blogs.map((blog) => (
           <div
             key={blog.id}
-            className="group bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 flex flex-col"
+            className="group border border-gray-200 rounded-2xl overflow-hidden hover:-translate-y-1 transition-all duration-300 flex flex-col"
           >
             {blog.image_url && (
-              <div className="relative w-full h-56 sm:h-64 md:h-48 lg:h-56 overflow-hidden bg-gray-100">
+              <div className="relative w-full h-56 sm:h-64 md:h-48 lg:h-56 overflow-hidden">
                 <Image
                   src={blog.image_url}
                   alt={blog.title}
@@ -93,7 +93,7 @@ export default async function BlogSection() {
 
               <Link
                 href={`/kabar/berita/${blog.id}`}
-                className="inline-flex items-center justify-center gap-2 text-white bg-green-600 hover:bg-green-700 font-medium py-3 px-5 rounded-xl transition-all duration-200 group-hover:gap-3 shadow-md hover:shadow-lg"
+                className="inline-flex items-center border justify-center gap-2 text-gray-800 bg-transparent hover:bg-green-700 hover:text-white font-medium py-3 px-5 rounded-3xl transition-all duration-200 group-hover:gap-3"
               >
                 <span>Baca Selengkapnya</span>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

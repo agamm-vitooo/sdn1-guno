@@ -172,7 +172,7 @@ export default function BlogPage() {
 
                     <Link
                       href={`/kabar/berita/${blog.id}`}
-                      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto text-white bg-green-700 hover:bg-green-800 font-semibold py-3 px-6 rounded-xl"
+                      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto border border-gray-400 rounded-3xl text-gray-800 bg-transparent hover:bg-green-700 hover:text-white transition-all duration-200 font-semibold py-3 px-6"
                     >
                       <span>Baca Selengkapnya</span>
                       <svg

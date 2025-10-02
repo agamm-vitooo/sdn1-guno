@@ -22,10 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${jakartaSans.variable} antialiased`}
+        className={`${jakartaSans.variable} antialiased bg-gradient-to-br from-blue-50 via-white to-blue-50`}
       >
         {children}
       </body>
     </html>
   );
 }
+

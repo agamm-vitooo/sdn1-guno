@@ -32,7 +32,7 @@ export default function VisiMisi() {
   return (
     <section
       id="visi-misi"
-      className="relative py-20 bg-gradient-to-br from-blue-50 via-white to-blue-50"
+      className="relative py-20"
     >
       <div className="max-w-6xl mx-auto px-6">
         {/* Judul */}

@@ -47,7 +47,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="contact" className="w-full py-20 bg-gradient-to-br from-gray-50 to-blue-50">
+    <section id="contact" className="w-full py-20">
       <div className="max-w-6xl mx-auto px-6">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-3 text-gray-900">Hubungi Kami</h2>

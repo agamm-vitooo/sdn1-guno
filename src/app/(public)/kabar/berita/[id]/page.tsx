@@ -108,35 +108,12 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
             {/* Content */}
             <div className="prose prose-lg max-w-none">
-              <p className="text-gray-700 text-lg whitespace-pre-line leading-relaxed">
+              <p className="text-gray-700 text-lg whitespace-pre-line leading-relaxed text-justify">
                 {blog.content}
               </p>
             </div>
           </div>
         </article>
-
-        {/* Bottom Navigation */}
-        <div className="mt-8 flex justify-between items-center">
-          <Link
-            href="/kabar/berita"
-            className="inline-flex items-center gap-2 text-white bg-green-600 hover:bg-green-700 font-medium py-3 px-6 rounded-lg transition-colors duration-200"
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            <span>Lihat Artikel Lainnya</span>
-          </Link>
-        </div>
       </div>
     </section>
   );

@@ -18,8 +18,8 @@ html {
 
 @media (prefers-color-scheme: dark) {
   :root {
---background: #f9fafb; /* Tailwind gray-50 */
---foreground: #111827; /* Tailwind gray-900 */
+    --background: linear-gradient(to bottom right, #eff6ff, #ffffff, #d8e8fc); /* mirip bg-gradient-to-br from-blue-50 via-white to-blue-50 */
+    --foreground: #111827; /* Tailwind gray-900 */
   }
 }
 

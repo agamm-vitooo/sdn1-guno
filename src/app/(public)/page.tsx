@@ -5,7 +5,7 @@ import VisiMisi from "@/components/sections/visimisi.section";
 
 export default function LandingPage() {
   return (
-    <main>
+    <main style={{ background: "var(--background)", color: "var(--foreground)" }}>
       <Hero />
       <VisiMisi />
       <BlogSection />
