@@ -1,36 +1,57 @@
 "use client"
 import Link from "next/link"
 import { useState } from "react"
+import {
+  Book,
+  School,
+  Users,
+  Calendar,
+  Newspaper,
+  Trophy,
+  Megaphone,
+  Image as ImageIcon,
+  FileText,
+  Clock,
+  Target,
+  ScrollText,
+  Building2,
+  Layers,
+  Rocket,
+  Baby,
+  Heart,
+  Leaf,
+} from "lucide-react"
 
-// Data untuk dropdown
+// Data dropdown
 const menus = {
   portal: [
-    { type: "a", href: "https://siboba-esguji.vercel.app/", label: "📖 Kamus Bahasa Jawa" },
-    { type: "link", href: "/portal/siswa", label: "👨‍🎓 Data Siswa" },
-    { type: "link", href: "/portal/kelulusan", label: "🎓 Data Kelulusan" },
+    { type: "a", href: "https://siboba-esguji.vercel.app/", label: "Kamus Bahasa Jawa", icon: Book },
+    { type: "a", href: "https://dinaspdank.wonogirikab.go.id/", label: "Dinas P&K Kab. Wonogiri", icon: School },
+    { type: "link", href: "/portal/siswa", label: "Data Siswa", icon: Users },
+    { type: "link", href: "/portal/kelulusan", label: "Data Kelulusan", icon: ScrollText },
   ],
   kabar: [
-    { type: "link", href: "/kabar/berita", label: "📰 Berita" },
-    { type: "link", href: "/kabar/agenda", label: "📅 Agenda" },
-    { type: "link", href: "/kabar/prestasi", label: "🏆 Prestasi" },
-    { type: "link", href: "/kabar/pengumuman", label: "📢 Pengumuman" },
-    { type: "link", href: "/kabar/galeri", label: "🛣️ Galeri" },
+    { type: "link", href: "/kabar/berita", label: "Berita", icon: Newspaper },
+    { type: "link", href: "/kabar/agenda", label: "Agenda", icon: Calendar },
+    { type: "link", href: "/kabar/prestasi", label: "Prestasi", icon: Trophy },
+    { type: "link", href: "/kabar/pengumuman", label: "Pengumuman", icon: Megaphone },
+    { type: "link", href: "/kabar/galeri", label: "Galeri", icon: ImageIcon },
   ],
   tentang: [
-    { type: "link", href: "/tentang/perangkat-pembelajaran", label: "📘 Perangkat Pembelajaran" },
-    { type: "link", href: "/tentang/jadwal", label: "📅 Jadwal Pelajaran Terbaru" },
-    { type: "link", href: "/tentang/visi-misi", label: "🎯 Visi dan Misi" },
-    { type: "link", href: "/tentang/sejarah", label: "📜 Sejarah Singkat" },
-    { type: "link", href: "/tentang/fasilitas", label: "🏫 Fasilitas" },
-    { type: "link", href: "/tentang/ekstrakurikuler", label: "⚽ Daftar Ekstrakurikuler" },
-    { type: "link", href: "/tentang/struktur", label: "👥 Struktur Organisasi" },
+    { type: "link", href: "/tentang/perangkat-pembelajaran", label: "Perangkat Pembelajaran", icon: FileText },
+    { type: "link", href: "/tentang/jadwal", label: "Jadwal Pelajaran Terbaru", icon: Clock },
+    { type: "link", href: "/tentang/visi-misi", label: "Visi dan Misi", icon: Target },
+    { type: "link", href: "/tentang/sejarah", label: "Sejarah Singkat", icon: ScrollText },
+    { type: "link", href: "/tentang/fasilitas", label: "Fasilitas", icon: Building2 },
+    { type: "link", href: "/tentang/ekstrakurikuler", label: "Daftar Ekstrakurikuler", icon: Target },
+    { type: "link", href: "/tentang/struktur", label: "Struktur Organisasi", icon: Layers },
   ],
   program: [
-    { type: "link", href: "/program/sekolah-penggerak", label: "🚀 Sekolah Penggerak" },
-    { type: "link", href: "/program/sekolah-damai", label: "🕊️ Sekolah Damai" },
-    { type: "link", href: "/program/sekolah-ramah-anak", label: "👶 Sekolah Ramah Anak" },
-    { type: "link", href: "/program/narasi-tali-hati", label: "❤️ Narasi Tali Hati" },
-    { type: "link", href: "/program/ketahanan-pangan", label: "🌱 Ketahanan Pangan Sekolah" },
+    { type: "link", href: "/program/sekolah-penggerak", label: "Sekolah Penggerak", icon: Rocket },
+    { type: "link", href: "/program/sekolah-damai", label: "Sekolah Damai", icon: Heart },
+    { type: "link", href: "/program/sekolah-ramah-anak", label: "Sekolah Ramah Anak", icon: Baby },
+    { type: "link", href: "/program/narasi-tali-hati", label: "Narasi Tali Hati", icon: Heart },
+    { type: "link", href: "/program/ketahanan-pangan", label: "Ketahanan Pangan Sekolah", icon: Leaf },
   ],
 }
 
@@ -43,36 +64,39 @@ export default function NavbarPublic() {
   }
 
   const renderDropdown = (name: keyof typeof menus, isMobile = false) => (
-    <div
-      className={`${
-        isMobile
-          ? "pl-6 space-y-1"
-          : "absolute left-0 mt-2 w-56 bg-white border rounded-lg shadow-sm"
-      }`}
-    >
-      {menus[name].map((item, i) =>
-        item.type === "a" ? (
-          <a
-            key={i}
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
-          >
-            {item.label}
-          </a>
-        ) : (
-          <Link
-            key={i}
-            href={item.href}
-            className="block px-4 py-2 text-gray-700 hover:bg-blue-50"
-          >
-            {item.label}
-          </Link>
-        )
-      )}
-    </div>
-  )
+  <div
+    className={`${
+      isMobile
+        ? "pl-6 space-y-1"
+        : "absolute left-0 mt-2 w-56 bg-white border rounded-lg shadow-sm"
+    }`}
+  >
+    {menus[name].map((item, i) => {
+      const Icon = item.icon
+      return item.type === "a" ? (
+        <a
+          key={i}
+          href={item.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-blue-50"
+        >
+          <Icon className="w-4 h-4 text-blue-600" />
+          {item.label}
+        </a>
+      ) : (
+        <Link
+          key={i}
+          href={item.href}
+          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-blue-50"
+        >
+          <Icon className="w-4 h-4 text-blue-600" />
+          {item.label}
+        </Link>
+      )
+    })}
+  </div>
+)
 
   return (
     <nav className="w-full bg-white/95 backdrop-blur-md shadow-sm fixed top-0 left-0 z-50 border-b border-gray-100">
