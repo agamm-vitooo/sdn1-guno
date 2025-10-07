@@ -113,7 +113,7 @@ export default function BlogPage() {
         {loading ? (
           <p className="text-center text-gray-500">Memuat artikel...</p>
         ) : blogs.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl shadow-lg">
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-gray-200">
             <p className="text-gray-500 text-xl font-semibold mb-2">Tidak ada artikel dalam rentang tanggal ini</p>
             <p className="text-gray-400 text-sm">Coba ubah filter tanggalnya</p>
           </div>
@@ -121,7 +121,7 @@ export default function BlogPage() {
           <div className="flex flex-col gap-8">
             {blogs.map((blog) => (
               <article
-                className="group bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden border border-gray-100"
+                className="group bg-white rounded-2xl hover:shadow-lg transition-shadow duration-200 overflow-hidden border border-gray-200"
                 key={blog.id}
               >
                 <div className="flex flex-col lg:flex-row">

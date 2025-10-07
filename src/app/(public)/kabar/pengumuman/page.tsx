@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
-import Pagination from "@/components/pagination"; // ⬅️ sesuaikan path komponen Pagination kamu
+import Pagination from "@/components/pagination";
+import Link from "next/link";
 
 interface Pengumuman {
   id: number;
@@ -59,7 +60,7 @@ export default function PengumumanPublicPage() {
           <p className="text-center text-gray-500">Memuat data...</p>
         ) : !items || items.length === 0 ? (
           /* Empty State */
-          <div className="text-center py-20 bg-white rounded-2xl shadow-xl">
+          <div className="text-center py-20 bg-white rounded-2xl border border-gray-200">
             <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg
                 className="w-10 h-10 text-purple-600"
@@ -91,7 +92,7 @@ export default function PengumumanPublicPage() {
                 return (
                   <article
                     key={it.id}
-                    className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-purple-100"
+                    className="bg-white rounded-2xl hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-200"
                   >
                     <div className="flex flex-col md:flex-row">
                       {/* Image Section */}
@@ -129,9 +130,11 @@ export default function PengumumanPublicPage() {
                         </div>
 
                         {/* Title */}
-                        <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                      <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                        <Link href={`/kabar/pengumuman/${it.id}`} className="hover:text-purple-600 transition-colors">
                           {it.title}
-                        </h2>
+                        </Link>
+                      </h2>
 
                         {/* Description */}
                         <p className="text-gray-600 leading-relaxed">

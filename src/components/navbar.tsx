@@ -47,7 +47,7 @@ export default function NavbarPublic() {
       className={`${
         isMobile
           ? "pl-6 space-y-1"
-          : "absolute left-0 mt-2 w-56 bg-white border rounded-lg shadow-md"
+          : "absolute left-0 mt-2 w-56 bg-white border rounded-lg shadow-sm"
       }`}
     >
       {menus[name].map((item, i) =>
@@ -75,7 +75,7 @@ export default function NavbarPublic() {
   )
 
   return (
-    <nav className="w-full bg-white/95 backdrop-blur-md shadow-lg fixed top-0 left-0 z-50 border-b border-gray-100">
+    <nav className="w-full bg-white/95 backdrop-blur-md shadow-sm fixed top-0 left-0 z-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}

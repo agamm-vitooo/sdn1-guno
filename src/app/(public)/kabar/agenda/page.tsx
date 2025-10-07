@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Image from "next/image";
 import Pagination from "@/components/pagination";
+import Link from "next/link";
 
 interface Agenda {
   id: number;
@@ -49,7 +50,7 @@ export default function AgendaPage() {
   }, [fetchAgendas]);
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-20">
+    <section className="min-h-screen py-20">
       <div className="max-w-5xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12">
@@ -61,7 +62,7 @@ export default function AgendaPage() {
         {loading ? (
           <p className="text-center text-gray-500">Memuat agenda...</p>
         ) : !agendas || agendas.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl shadow-lg">
+          <div className="text-center py-20 bg-white rounded-2xl border border-gray-200">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg
                 className="w-10 h-10 text-gray-400"
@@ -84,7 +85,7 @@ export default function AgendaPage() {
             {agendas.map((agenda) => (
               <article
                 key={agenda.id}
-                className="bg-white rounded-2xl shadow-md border border-gray-100 overflow-hidden"
+                className="bg-white rounded-2xl border border-gray-200 overflow-hidden"
               >
                 <div className="flex flex-col md:flex-row">
                   {/* Image Section */}
@@ -131,7 +132,11 @@ export default function AgendaPage() {
                     </div>
 
                     {/* Title */}
-                    <h2 className="text-2xl font-bold text-gray-900 mb-3">{agenda.title}</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                      <Link href={`/kabar/agenda/${agenda.id}`} className="hover:text-blue-600 transition-colors">
+                        {agenda.title}
+                      </Link>
+                    </h2>
 
                     {/* Description */}
                     <p className="text-gray-600 leading-relaxed">{agenda.description}</p>
