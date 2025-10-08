@@ -36,7 +36,7 @@ export default function BlogPage() {
 
     let query = supabase
       .from("blogs")
-      .select("id, title, content, created_at, image_url, is_featured", { count: "exact" })
+      .select("id, title, content, created_at, image_url", { count: "exact" })
       .order("id", { ascending: false });
 
     if (startDate && endDate) {

@@ -15,7 +15,6 @@ interface Blog {
   title: string;
   content: string;
   image_url: string | null;
-  is_featured: boolean;
 }
 
 interface BlogListProps {
@@ -51,19 +50,6 @@ export default function BlogList({ refresh }: BlogListProps) {
     else fetchBlogs();
   };
 
-  const handleFeatureToggle = async (id: number, checked: boolean) => {
-    const { error } = await supabase
-      .from("blogs")
-      .update({ is_featured: checked })
-      .eq("id", id);
-
-    if (error) console.error("❌ Gagal update featured:", error.message);
-    else
-      setBlogs((prev) =>
-        prev.map((b) => (b.id === id ? { ...b, is_featured: checked } : b))
-      );
-  };
-
   return (
     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
       {blogs.map((blog) => (
@@ -83,39 +69,25 @@ export default function BlogList({ refresh }: BlogListProps) {
           <h3 className="font-semibold text-lg">{blog.title}</h3>
           <p className="text-gray-700 flex-1">{blog.content}</p>
 
-          <div className="flex items-center mt-3 justify-between">
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={blog.is_featured}
-                onChange={(e) =>
-                  handleFeatureToggle(blog.id, e.target.checked)
-                }
-                className="w-4 h-4"
-              />
-              <span className="text-sm">Tampilkan di BlogSection</span>
-            </label>
+          <div className="flex items-center mt-3 justify-end space-x-2">
+            <button
+              onClick={() => setEditBlog(blog)}
+              className="px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600"
+            >
+              Edit
+            </button>
 
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setEditBlog(blog)}
-                className="px-3 py-1 text-sm bg-yellow-500 text-white rounded hover:bg-yellow-600"
-              >
-                Edit
-              </button>
-
-              <button
-                onClick={() => handleDelete(blog.id)}
-                className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Hapus
-              </button>
-            </div>
+            <button
+              onClick={() => handleDelete(blog.id)}
+              className="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+            >
+              Hapus
+            </button>
           </div>
         </div>
       ))}
 
-      {/* Modal / inline form edit */}
+      {/* Modal edit form */}
       {editBlog && (
         <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center p-4 z-50">
           <BlogForm

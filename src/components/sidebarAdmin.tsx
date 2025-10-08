@@ -32,7 +32,7 @@ export default function SidebarAdmin({ isOpen, onClose }: SidebarProps) {
       icon: FileText,
       submenu: [
         { name: "Perangkat Pembelajaran", href: "/admin/tentang/perangkat-pembelajaran" },
-        { name: "Jadwal Pelajaran Terbaru", href: "/admin/tentang/jadwal" },
+        { name: "Jadwal Pelajaran Terbaru", href: "/admin/tentang/jadwal-pembelajaran" },
         { name: "Visi dan Misi", href: "/admin/tentang/visi-misi" },
         { name: "Sejarah Singkat", href: "/admin/tentang/sejarah" },
         { name: "Fasilitas", href: "/admin/tentang/fasilitas" },

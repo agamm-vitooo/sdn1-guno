@@ -39,7 +39,7 @@ const menus = {
   ],
   tentang: [
     { type: "link", href: "/tentang/perangkat-pembelajaran", label: "Perangkat Pembelajaran", icon: FileText },
-    { type: "link", href: "/tentang/jadwal", label: "Jadwal Pelajaran Terbaru", icon: Clock },
+    { type: "link", href: "/tentang/jadwal-pembelajaran", label: "Jadwal Pelajaran Terbaru", icon: Clock },
     { type: "link", href: "/tentang/visi-misi", label: "Visi dan Misi", icon: Target },
     { type: "link", href: "/tentang/sejarah", label: "Sejarah Singkat", icon: ScrollText },
     { type: "link", href: "/tentang/fasilitas", label: "Fasilitas", icon: Building2 },

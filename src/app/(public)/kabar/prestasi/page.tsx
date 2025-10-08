@@ -64,7 +64,7 @@ export default function PublicPrestasiPage() {
 
         {/* Empty State */}
         {!loading && prestasis.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-2xl shadow-xl">
+          <div className="text-center py-20 bg-white rounded-2xl">
             <div className="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <svg
                 className="w-12 h-12 text-orange-500"
@@ -83,7 +83,7 @@ export default function PublicPrestasiPage() {
               {prestasis.map((p) => (
                 <article
                   key={p.id}
-                  className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100"
+                  className="bg-white rounded-2xl hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-200"
                 >
                   {/* Image Container */}
                   {p.image_url && (
