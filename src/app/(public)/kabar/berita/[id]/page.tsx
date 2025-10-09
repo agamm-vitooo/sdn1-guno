@@ -1,3 +1,6 @@
+"use client";
+console.log("🧭 Halaman detail render");
+
 // src/app/(public)/blog/[id]/page.tsx
 import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";

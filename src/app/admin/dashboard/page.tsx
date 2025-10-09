@@ -1,75 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import VisitorsChartsSection from "../../../components/admin/dashboard/chart";
+import ContactSection from "../../../components/admin/dashboard/contact/page";
 
-export default function LandingVisitorsChart() {
-  const [data, setData] = useState<{ date: string; count: number }[]>([]);
-  const [greeting, setGreeting] = useState("");
-
-  useEffect(() => {
-    // Fetch data pengunjung
-    fetch("/api/visitors")
-      .then((res) => res.json())
-      .then((res) => {
-        const chartData = Object.entries(res).map(([date, count]) => ({
-          date,
-          count: count as number,
-        }));
-        setData(chartData);
-      });
-
-    // Tentukan sapaan
-    const hour = new Date().getHours();
-    if (hour >= 4 && hour < 11) {
-      setGreeting("Selamat Pagi, Admin 👋");
-    } else if (hour >= 11 && hour < 15) {
-      setGreeting("Selamat Siang, Admin ☀️");
-    } else if (hour >= 15 && hour < 18) {
-      setGreeting("Selamat Sore, Admin 🌅");
-    } else {
-      setGreeting("Selamat Malam, Admin 🌙");
-    }
-  }, []);
-
-  const chartOptions: Highcharts.Options = {
-    chart: {
-      type: "line",
-      backgroundColor: "#fff",
-    },
-    title: {
-      text: "Statistik Pengunjung Landing Page",
-    },
-    xAxis: {
-      categories: data.map((d) => d.date),
-      title: { text: "Tanggal" },
-    },
-    yAxis: {
-      title: { text: "Jumlah Pengunjung" },
-      allowDecimals: false,
-    },
-    series: [
-      {
-        name: "Landing Page",
-        data: data.map((d) => d.count),
-        type: "line",
-        color: "#16a34a",
-      },
-    ],
-    tooltip: {
-      shared: true,
-      valueSuffix: " kunjungan",
-    },
-    credits: {
-      enabled: false,
-    },
-  };
-
+export default function DashboardPage() {
   return (
-    <div className="bg-white rounded-xl shadow p-6">
-      <h2 className="text-lg font-semibold mb-4">{greeting}</h2>
-      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-    </div>
+    <main className="p-6 space-y-6 bg-gray-100 min-h-screen">
+      {/* Chart di atas */}
+      <VisitorsChartsSection />
+
+      {/* Contact di bawah */}
+      <ContactSection />
+    </main>
   );
 }
