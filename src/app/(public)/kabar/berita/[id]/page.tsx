@@ -1,41 +1,68 @@
 "use client";
-console.log("🧭 Halaman detail render");
 
-// src/app/(public)/blog/[id]/page.tsx
+import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-interface BlogPageProps {
-  params: Promise<{
-    id: string;
-  }>;
+// 🧩 Definisikan tipe blog
+interface Blog {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  image_url: string | null;
+  is_featured: boolean;
 }
 
-export default async function BlogPage({ params }: BlogPageProps) {
-  const { id } = await params; // Await the params Promise
+export default function BlogPage() {
+  const { id } = useParams();
+  const [blog, setBlog] = useState<Blog | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Ambil artikel berdasarkan id
-  const { data: blog, error } = await supabase
-    .from("blogs")
-    .select("id, title, content, created_at, image_url, is_featured")
-    .eq("id", id)
-    .single();
+  useEffect(() => {
+    if (!id) return;
 
-  if (error || !blog) {
-    notFound(); // jika tidak ada artikel, arahkan ke 404
-  }
+    const fetchBlog = async () => {
+      console.log("📡 Mengambil artikel dengan id:", id);
+      const { data, error } = await supabase
+        .from("blogs")
+        .select("id, title, content, created_at, image_url, is_featured")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        console.error("❌ Gagal mengambil data:", error);
+      } else {
+        console.log("✅ Data blog:", data);
+        setBlog(data as Blog);
+      }
+      setLoading(false);
+    };
+
+    fetchBlog();
+  }, [id]);
+
+  if (loading)
+    return <p className="text-center mt-20 text-gray-500">Memuat artikel...</p>;
+
+  if (!blog)
+    return (
+      <div className="text-center mt-20 text-red-600">
+        Artikel tidak ditemukan.
+      </div>
+    );
 
   return (
     <section className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-20">
       <div className="max-w-4xl mx-auto px-6">
-        {/* Back Button */}
+        {/* Tombol Kembali */}
         <Link
           href="/kabar/berita"
           className="inline-flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium mb-8 transition-colors duration-200 group"
@@ -56,9 +83,9 @@ export default async function BlogPage({ params }: BlogPageProps) {
           <span>Kembali ke Semua Artikel</span>
         </Link>
 
-        {/* Article Container */}
+        {/* Kontainer Artikel */}
         <article className="bg-white rounded-2xl shadow-lg overflow-hidden">
-          {/* Image Header */}
+          {/* Gambar Utama */}
           {blog.image_url && (
             <div className="relative w-full h-96 bg-gray-100">
               <Image
@@ -66,17 +93,15 @@ export default async function BlogPage({ params }: BlogPageProps) {
                 alt={blog.title}
                 fill
                 className="object-cover"
-                priority // ✅ langsung load gambar utama
+                priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                placeholder="blur" // ✅ blur loading
-                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMTUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjE1IiBmaWxsPSIjZ2ZnIi8+PC9zdmc+" 
               />
             </div>
           )}
 
-          {/* Content */}
+          {/* Konten Artikel */}
           <div className="p-8 md:p-12">
-            {/* Date Badge */}
+            {/* Tanggal */}
             {blog.created_at && (
               <div className="flex items-center gap-2 mb-6">
                 <div className="flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full">
@@ -104,12 +129,12 @@ export default async function BlogPage({ params }: BlogPageProps) {
               </div>
             )}
 
-            {/* Title */}
+            {/* Judul */}
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 leading-tight">
               {blog.title}
             </h1>
 
-            {/* Content */}
+            {/* Isi Konten */}
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-700 text-lg whitespace-pre-line leading-relaxed text-justify">
                 {blog.content}
