@@ -16,27 +16,28 @@ export default function FasilitasPublicPage() {
   useEffect(() => {
     fetch("/api/fasilitas")
       .then((res) => res.json())
-      .then((json) => setData(json.data));
+      .then((json) => setData(json.data))
+      .catch(console.error);
   }, []);
 
   return (
     <main className="p-6 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-bold mb-6 text-center">Fasilitas Sekolah</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {data.map((fasilitas) => (
+        {data.map((item) => (
           <div
-            key={fasilitas._id}
+            key={item._id}
             className="bg-white rounded-lg shadow hover:shadow-lg transition p-4 text-center"
           >
             <div className="relative w-full h-48 mb-3">
               <Image
-                src={fasilitas.image_url}
-                alt={fasilitas.title}
+                src={item.image_url}
+                alt={item.title}
                 fill
                 className="object-cover rounded-md"
               />
             </div>
-            <h2 className="font-semibold text-gray-800">{fasilitas.title}</h2>
+            <h2 className="font-semibold text-gray-800">{item.title}</h2>
           </div>
         ))}
       </div>

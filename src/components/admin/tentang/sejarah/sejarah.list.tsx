@@ -13,19 +13,20 @@ interface SejarahItem {
 
 interface Props {
   onEdit: (item: SejarahItem) => void;
-  refreshTrigger?: number;
+  refreshTrigger?: number; // bisa dipakai untuk reload list setelah tambah/edit/hapus
 }
 
 export default function SejarahList({ onEdit, refreshTrigger }: Props) {
-  const [data, setData] = useState<SejarahItem | null>(null);
+  const [data, setData] = useState<SejarahItem[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Ambil data dari backend
   const fetchData = async () => {
     setLoading(true);
     try {
       const res = await fetch("/api/sejarah");
       const json = await res.json();
-      setData(json.data?.[0] || null); // hanya ambil satu data pertama
+      setData(json.data || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -37,16 +38,23 @@ export default function SejarahList({ onEdit, refreshTrigger }: Props) {
     fetchData();
   }, [refreshTrigger]);
 
-  const handleDelete = async () => {
-    if (!data?._id) return;
-    if (!confirm("Yakin ingin hapus sejarah sekolah?")) return;
-    await fetch(`/api/sejarah/${data._id}`, { method: "DELETE" });
-    setData(null);
+  const handleDelete = async (id: string) => {
+    if (!confirm("Yakin ingin hapus sejarah ini?")) return;
+    try {
+      const res = await fetch(`/api/sejarah/${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setData((prev) => prev.filter((item) => item._id !== id));
+      } else {
+        alert("Gagal menghapus sejarah");
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  if (loading) return <p>Memuat...</p>;
+  if (loading) return <p>Memuat sejarah...</p>;
 
-  if (!data)
+  if (data.length === 0)
     return (
       <p className="text-gray-500 text-center bg-white p-6 rounded border">
         Belum ada sejarah. Silakan tambahkan menggunakan form di atas.
@@ -54,39 +62,43 @@ export default function SejarahList({ onEdit, refreshTrigger }: Props) {
     );
 
   return (
-    <div className="bg-white p-6 rounded border">
-      <h3 className="text-xl font-semibold mb-2">{data.title}</h3>
-      <p className="text-gray-600 mb-3">{data.description}</p>
+    <div className="space-y-4">
+      {data.map((item) => (
+        <div key={item._id} className="bg-white p-6 rounded border">
+          <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+          <p className="text-gray-600 mb-3">{item.description}</p>
 
-      {data.image_url && (
-        <div className="relative w-full max-w-md h-64 mb-3">
-          <Image
-            src={data.image_url}
-            alt={data.title}
-            fill
-            className="object-cover rounded-md border"
-          />
+          {item.image_url && (
+            <div className="relative w-full max-w-md h-64 mb-3">
+              <Image
+                src={item.image_url}
+                alt={item.title}
+                fill
+                className="object-cover rounded-md border"
+              />
+            </div>
+          )}
+
+          <div className="text-xs text-gray-400 mb-4">
+            Diperbarui: {new Date(item.created_at).toLocaleString("id-ID")}
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              onClick={() => onEdit(item)}
+              className="px-4 py-2 bg-yellow-500 text-white rounded"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => handleDelete(item._id)}
+              className="px-4 py-2 bg-red-600 text-white rounded"
+            >
+              Hapus
+            </button>
+          </div>
         </div>
-      )}
-
-      <div className="text-xs text-gray-400 mb-4">
-        Diperbarui: {new Date(data.created_at).toLocaleString("id-ID")}
-      </div>
-
-      <div className="flex gap-2">
-        <button
-          onClick={() => onEdit(data)}
-          className="px-4 py-2 bg-yellow-500 text-white rounded"
-        >
-          Edit
-        </button>
-        <button
-          onClick={handleDelete}
-          className="px-4 py-2 bg-red-600 text-white rounded"
-        >
-          Hapus
-        </button>
-      </div>
+      ))}
     </div>
   );
 }

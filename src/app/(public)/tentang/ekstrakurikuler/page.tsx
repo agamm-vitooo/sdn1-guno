@@ -1,5 +1,5 @@
-// src/app/ekstrakurikuler/page.tsx
 "use client";
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
@@ -17,7 +17,7 @@ export default function EkstrakurikulerPublicPage() {
   useEffect(() => {
     fetch("/api/ekstrakurikuler")
       .then((res) => res.json())
-      .then((json) => setData(json.data as Ekstra[]))
+      .then((json) => setData(json.data))
       .catch(console.error);
   }, []);
 
@@ -28,15 +28,27 @@ export default function EkstrakurikulerPublicPage() {
 
         <div className="grid gap-6 md:grid-cols-3">
           {data.map((item) => (
-            <article key={item._id} className="bg-white rounded-lg shadow overflow-hidden">
+            <article
+              key={item._id}
+              className="bg-white rounded-lg shadow overflow-hidden"
+            >
               <div className="relative h-44">
-                <Image src={item.image_url} alt={item.title} fill className="object-cover" />
+                <Image
+                  src={item.image_url}
+                  alt={item.title}
+                  fill
+                  className="object-cover"
+                />
               </div>
               <div className="p-4">
                 <h3 className="font-semibold">{item.title}</h3>
-                <p className="text-sm text-gray-600 mt-2 line-clamp-3">{item.description}</p>
+                <p className="text-sm text-gray-600 mt-2 line-clamp-3">
+                  {item.description}
+                </p>
                 <p className="text-xs text-gray-400 mt-3">
-                  {item.created_at ? new Date(item.created_at).toLocaleDateString("id-ID") : ""}
+                  {item.created_at
+                    ? new Date(item.created_at).toLocaleDateString("id-ID")
+                    : ""}
                 </p>
               </div>
             </article>

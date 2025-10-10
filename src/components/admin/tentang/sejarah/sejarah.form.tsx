@@ -1,13 +1,11 @@
 "use client";
-
-import Image from "next/image";
 import { useState, useEffect, ChangeEvent } from "react";
+import Image from "next/image";
 
-// tipe data untuk item sejarah
 interface Sejarah {
   _id?: string;
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   image_url?: string;
 }
 
@@ -20,118 +18,100 @@ interface Props {
 export default function SejarahForm({ editItem, onSuccess, onCancel }: Props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
 
+  // Isi data saat edit
   useEffect(() => {
     if (editItem) {
       setTitle(editItem.title || "");
       setDescription(editItem.description || "");
-      setImageUrl(editItem.image_url || "");
+      setPreview(editItem.image_url || "");
     } else {
       setTitle("");
       setDescription("");
-      setImageUrl("");
+      setFile(null);
+      setPreview("");
     }
   }, [editItem]);
 
-  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // Preview gambar
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0] || null;
+    setFile(selectedFile);
 
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_PRESET!);
-
-    try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD!}/image/upload`,
-        { method: "POST", body: formData }
-      );
-      const data = await res.json();
-      if (data.secure_url) {
-        setImageUrl(data.secure_url);
-      } else {
-        alert("Gagal upload gambar");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Terjadi kesalahan saat upload gambar");
-    } finally {
-      setUploading(false);
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreview(reader.result as string);
+      reader.readAsDataURL(selectedFile);
+    } else {
+      setPreview("");
     }
   };
 
+  // Submit ke backend
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!title || !description) return alert("Lengkapi semua field!");
     setLoading(true);
 
     try {
-      const body = JSON.stringify({
-        title,
-        description,
-        image_url: imageUrl,
-      });
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      if (file) formData.append("file", file);
 
-      const res = await fetch(
-        editItem ? `/api/sejarah/${editItem._id}` : `/api/sejarah`,
-        {
-          method: editItem ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
-          body,
-        }
-      );
+      const url = editItem ? `/api/sejarah/${editItem._id}` : "/api/sejarah";
+      const method = editItem ? "PUT" : "POST";
 
-      if (!res.ok) throw new Error("Gagal menyimpan data");
+      const res = await fetch(url, { method, body: formData });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) throw new Error(data.message || "Gagal menyimpan");
+
+      // Reset
+      setTitle("");
+      setDescription("");
+      setFile(null);
+      setPreview("");
       onSuccess();
-    } catch (error) {
-      console.error(error);
-      alert("Terjadi kesalahan saat menyimpan data");
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat menyimpan. Lihat console log.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow space-y-4">
+      <h2 className="text-lg font-semibold">{editItem ? "Edit Sejarah" : "Tambah Sejarah"}</h2>
+
       <input
         type="text"
         placeholder="Judul sejarah"
+        className="w-full border p-2 rounded"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        className="border w-full p-2 rounded"
         required
       />
+
       <textarea
         placeholder="Deskripsi sejarah"
+        className="w-full border p-2 rounded"
+        rows={4}
         value={description}
         onChange={(e) => setDescription(e.target.value)}
-        className="border w-full p-2 rounded"
-        rows={5}
         required
       />
 
-      {/* upload gambar */}
       <div>
-        <label className="block font-medium mb-1">Gambar</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="border p-2 w-full rounded"
-        />
-        {uploading && <p className="text-sm text-gray-500 mt-1">Mengupload...</p>}
-
-        {imageUrl && (
-          <div className="relative mt-3 w-full max-h-64 h-64">
-            <Image
-              src={imageUrl}
-              alt="Preview"
-              fill
-              className="object-cover rounded border"
-            />
+        <label className="block mb-1 font-medium">Gambar</label>
+        <input type="file" accept="image/*" onChange={handleFileChange} />
+        {preview && (
+          <div className="relative mt-3 w-full max-h-64 h-64 overflow-hidden border rounded">
+            <Image src={preview} alt="Preview" fill className="object-cover" />
           </div>
         )}
       </div>
@@ -139,10 +119,10 @@ export default function SejarahForm({ editItem, onSuccess, onCancel }: Props) {
       <div className="flex gap-2">
         <button
           type="submit"
-          disabled={loading}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          disabled={loading}
         >
-          {loading ? "Menyimpan..." : editItem ? "Simpan Perubahan" : "Tambah"}
+          {loading ? "Menyimpan..." : editItem ? "Simpan Perubahan" : "Simpan"}
         </button>
 
         {onCancel && (
