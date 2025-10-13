@@ -27,27 +27,35 @@ export default function BlogPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!id) return;
+  if (!id) return;
 
-    const fetchBlog = async () => {
-      console.log("📡 Mengambil artikel dengan id:", id);
-      const { data, error } = await supabase
-        .from("blogs")
-        .select("id, title, content, created_at, image_url, is_featured")
-        .eq("id", id)
-        .single();
+  const fetchBlog = async () => {
+    console.log("📡 Mengambil artikel dengan id:", id);
+    const blogId = Number(id); // konversi id ke number
 
-      if (error) {
-        console.error("❌ Gagal mengambil data:", error);
-      } else {
-        console.log("✅ Data blog:", data);
-        setBlog(data as Blog);
-      }
+    if (isNaN(blogId)) {
+      console.error("❌ ID tidak valid:", id);
       setLoading(false);
-    };
+      return;
+    }
 
-    fetchBlog();
-  }, [id]);
+    const { data, error } = await supabase
+      .from("blogs")
+      .select("id, title, content, created_at, image_url")
+      .eq("id", blogId)
+      .single();
+
+    if (error) {
+      console.error("❌ Gagal mengambil data:", error);
+    } else {
+      console.log("✅ Data blog:", data);
+      setBlog(data as Blog);
+    }
+    setLoading(false);
+  };
+
+  fetchBlog();
+}, [id]);
 
   if (loading)
     return <p className="text-center mt-20 text-gray-500">Memuat artikel...</p>;
@@ -60,7 +68,7 @@ export default function BlogPage() {
     );
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 py-20">
+    <section className="min-h-screen py-20">
       <div className="max-w-4xl mx-auto px-6">
         {/* Tombol Kembali */}
         <Link
@@ -84,7 +92,7 @@ export default function BlogPage() {
         </Link>
 
         {/* Kontainer Artikel */}
-        <article className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <article className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
           {/* Gambar Utama */}
           {blog.image_url && (
             <div className="relative w-full h-96 bg-gray-100">

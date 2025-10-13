@@ -41,40 +41,61 @@ export default function GaleriForm({ onSaved, editData }: GaleriFormProps) {
 
     let image_url = editData?.image_url || null;
 
-    if (imageFile) {
-      const compressedFile = await imageCompression(imageFile, { maxSizeMB: 0.2 });
-      if (compressedFile.size > 200 * 1024) {
-        alert("Gambar terlalu besar (>200 KB) setelah kompresi!");
-        setLoading(false);
-        return;
+    try {
+      if (imageFile) {
+        // 🔹 Kompres gambar maksimal 100 KB
+        const compressedFile = await imageCompression(imageFile, {
+          maxSizeMB: 0.1, // 0.1 MB = 100 KB
+          maxWidthOrHeight: 1024,
+          useWebWorker: true,
+          initialQuality: 0.7,
+        });
+
+        // 🔹 Validasi ukuran setelah kompres
+        if (compressedFile.size > 100 * 1024) {
+          alert("Gambar terlalu besar (>100 KB) setelah kompresi!");
+          setLoading(false);
+          return;
+        }
+
+        const fileName = `${Date.now()}-${compressedFile.name}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from("blog-images/galeri")
+          .upload(fileName, compressedFile, {
+            cacheControl: "3600",
+            upsert: true,
+          });
+
+        if (uploadError) {
+          alert(uploadError.message);
+          setLoading(false);
+          return;
+        }
+
+        // 🔹 Simpan path image di database
+        image_url = `blog-images/galeri/${fileName}`;
       }
 
-      const fileName = `${Date.now()}-${compressedFile.name}`;
-      const { error: uploadError } = await supabase.storage
-        .from("blog-images/galeri")
-        .upload(fileName, compressedFile, { cacheControl: "3600", upsert: true });
-
-      if (uploadError) {
-        alert(uploadError.message);
-        setLoading(false);
-        return;
+      // 🔹 Insert atau update data
+      if (editData?.id) {
+        await supabase.from("galeri").update({ title, description, image_url }).eq("id", editData.id);
+      } else {
+        await supabase.from("galeri").insert([{ title, description, image_url }]);
       }
 
-      image_url = `blog-images/galeri/${fileName}`;
+      // 🔹 Reset form
+      setTitle("");
+      setDescription("");
+      setImageFile(null);
+      setImagePreview(null);
+      onSaved();
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Terjadi kesalahan saat menyimpan data.");
+    } finally {
+      setLoading(false);
     }
-
-    if (editData?.id) {
-      await supabase.from("galeri").update({ title, description, image_url }).eq("id", editData.id);
-    } else {
-      await supabase.from("galeri").insert([{ title, description, image_url }]);
-    }
-
-    setTitle("");
-    setDescription("");
-    setImageFile(null);
-    setImagePreview(null);
-    setLoading(false);
-    onSaved();
   };
 
   return (
@@ -87,19 +108,21 @@ export default function GaleriForm({ onSaved, editData }: GaleriFormProps) {
         required
         className="border p-2 w-full rounded"
       />
+
       <textarea
         placeholder="Deskripsi"
         value={description}
         onChange={(e) => setDescription(e.target.value)}
         className="border p-2 w-full rounded"
       />
+
       <input
         type="file"
         accept="image/*"
         onChange={(e) => handleImageChange(e.target.files?.[0] || null)}
       />
 
-      {/* Preview Gambar menggunakan Next.js Image */}
+      {/* Preview Gambar */}
       {imagePreview && (
         <div className="w-48 h-48 mt-2 rounded overflow-hidden border relative">
           <Image
@@ -115,9 +138,11 @@ export default function GaleriForm({ onSaved, editData }: GaleriFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+        className={`${
+          loading ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+        } text-white px-4 py-2 rounded transition-colors`}
       >
-        {editData ? "Update" : "Tambah"}
+        {loading ? "Menyimpan..." : editData ? "Update" : "Tambah"}
       </button>
     </form>
   );
