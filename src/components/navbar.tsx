@@ -1,8 +1,8 @@
 "use client"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
-  Book, School, Users, Calendar, Newspaper, Trophy, Megaphone, Image as ImageIcon, FileText, Clock, Target, ScrollText, Building2, Layers, Rocket, Baby, Heart, Leaf, } from "lucide-react"
+  Book, School, Users, Calendar, Newspaper, Trophy, Megaphone, ImageIcon, FileText, Clock, Target, ScrollText, Building2, Layers, Rocket, Baby, Heart, Leaf, } from "lucide-react"
 
 // Data dropdown
 const menus = {
@@ -40,6 +40,20 @@ const menus = {
 export default function NavbarPublic() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const toggleDropdown = (menu: string) => {
     setOpenDropdown(openDropdown === menu ? null : menu)
@@ -50,8 +64,8 @@ export default function NavbarPublic() {
     className={`${
       isMobile
         ? "pl-6 space-y-1"
-        : "absolute left-0 mt-2 w-56 bg-white border rounded-lg shadow-sm"
-    }`}
+        : "absolute left-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg"
+    } animate-in fade-in slide-in-from-top-2 duration-200`}
   >
     {menus[name].map((item, i) => {
       const Icon = item.icon
@@ -61,7 +75,7 @@ export default function NavbarPublic() {
           href={item.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-blue-50"
+          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-150 rounded"
         >
           <Icon className="w-4 h-4 text-blue-600" />
           {item.label}
@@ -70,7 +84,7 @@ export default function NavbarPublic() {
         <Link
           key={i}
           href={item.href}
-          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-blue-50"
+          className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-150 rounded"
         >
           <Icon className="w-4 h-4 text-blue-600" />
           {item.label}
@@ -81,17 +95,35 @@ export default function NavbarPublic() {
 )
 
   return (
-    <nav className="w-full bg-white/95 backdrop-blur-md shadow-sm fixed top-0 left-0 z-50 border-b border-gray-100">
+    <nav 
+      className={`w-full fixed top-0 left-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? "bg-white shadow-md border-b border-gray-200" 
+          : "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div 
+          className={`flex justify-between items-center transition-all duration-300 ${
+            isScrolled ? "h-14" : "h-16"
+          }`}
+        >
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 font-bold text-xl text-blue-600"
+            className={`flex items-center gap-2 font-bold text-blue-600 transition-all duration-300 ${
+              isScrolled ? "text-lg" : "text-xl"
+            }`}
           >
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-md">
+            <div 
+              className={`bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-md transition-all duration-300 ${
+                isScrolled ? "w-8 h-8" : "w-10 h-10"
+              }`}
+            >
               <svg
-                className="w-6 h-6 text-white"
+                className={`text-white transition-all duration-300 ${
+                  isScrolled ? "w-5 h-5" : "w-6 h-6"
+                }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -113,7 +145,7 @@ export default function NavbarPublic() {
               <div key={menu} className="relative">
                 <button
                   onClick={() => toggleDropdown(menu)}
-                  className="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1"
+                  className="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium flex items-center gap-1 transition-colors duration-150 rounded-lg hover:bg-blue-50"
                 >
                   {menu === "portal"
                     ? "Portal"
@@ -123,7 +155,7 @@ export default function NavbarPublic() {
                     ? "Tentang ESGUJI"
                     : "Program Unggulan"}
                   <svg
-                    className={`w-4 h-4 transform transition-transform ${
+                    className={`w-4 h-4 transform transition-transform duration-200 ${
                       openDropdown === menu ? "rotate-180" : ""
                     }`}
                     fill="none"
@@ -145,7 +177,7 @@ export default function NavbarPublic() {
 
             <Link
               href="/login"
-              className="ml-4 inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2.5 rounded-lg hover:from-blue-700 hover:to-blue-800 font-medium shadow-md transition"
+              className="ml-4 inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-5 py-2.5 rounded-lg hover:from-blue-700 hover:to-blue-800 font-medium shadow-md transition-all duration-200 hover:scale-105 hover:shadow-lg"
             >
               <svg
                 className="w-4 h-4"
@@ -168,7 +200,7 @@ export default function NavbarPublic() {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+              className="p-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors duration-150"
             >
               <svg
                 className="h-6 w-6"
@@ -198,13 +230,13 @@ export default function NavbarPublic() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden bg-white border-t border-gray-100">
+          <div className="md:hidden bg-white border-t border-gray-100 animate-in fade-in slide-in-from-top-4 duration-300">
             <div className="px-2 pt-2 pb-4 space-y-1">
               {["portal", "kabar", "tentang", "program"].map((menu) => (
                 <div key={menu}>
                   <button
                     onClick={() => toggleDropdown(menu)}
-                    className="flex items-center justify-between w-full px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium"
+                    className="flex items-center justify-between w-full px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-colors duration-150"
                   >
                     <span>
                       {menu === "portal"
@@ -216,7 +248,7 @@ export default function NavbarPublic() {
                         : "Program Unggulan"}
                     </span>
                     <svg
-                      className={`w-5 h-5 transform transition-transform ${
+                      className={`w-5 h-5 transform transition-transform duration-200 ${
                         openDropdown === menu ? "rotate-180" : ""
                       }`}
                       fill="none"
@@ -238,7 +270,7 @@ export default function NavbarPublic() {
 
               <Link
                 href="/login"
-                className="block px-4 py-3 mt-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg text-center"
+                className="block px-4 py-3 mt-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg text-center hover:from-blue-700 hover:to-blue-800 transition-all duration-200"
               >
                 Login
               </Link>
