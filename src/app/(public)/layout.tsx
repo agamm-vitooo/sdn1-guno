@@ -22,12 +22,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" className={jakarta.variable}>
-      <body className="antialiased min-h-screen flex flex-col">
+      <body className="antialiased flex flex-col min-h-screen">
         {/* Navbar sticky di atas */}
         <Navbar />
 
-        {/* Main isi konten, dorong footer ke bawah */}
-        <main className="flex-1 pt-16">
+        {/* Konten utama isi seluruh ruang tersisa */}
+        <main className="flex-grow pt-16">
           {children}
         </main>
 
