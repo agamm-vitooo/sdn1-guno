@@ -62,7 +62,7 @@ export default function SidebarAdmin({ isOpen, onClose }: SidebarProps) {
         { name: "Sekolah Damai", href: "/admin/program/sekolah-damai", icon: Heart },
         { name: "Sekolah Ramah Anak", href: "/admin/program/sekolah-ramah-anak", icon: Baby },
         { name: "Narasi Tali Hati", href: "/admin/program/narasi-tali-hati", icon: Heart },
-        { name: "Ketahanan Pangan Sekolah", href: "/admin/program/ketahanan-pangan", icon: Leaf },
+        { name: "Ketahanan Pangan Sekolah", href: "/admin/program/ketahanan-pangan-sekolah", icon: Leaf },
       ],
     },
     {

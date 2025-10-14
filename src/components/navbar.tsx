@@ -33,7 +33,7 @@ const menus = {
     { type: "link", href: "/program/sekolah-damai", label: "Sekolah Damai", icon: Heart },
     { type: "link", href: "/program/sekolah-ramah-anak", label: "Sekolah Ramah Anak", icon: Baby },
     { type: "link", href: "/program/narasi-tali-hati", label: "Narasi Tali Hati", icon: Heart },
-    { type: "link", href: "/program/ketahanan-pangan", label: "Ketahanan Pangan Sekolah", icon: Leaf },
+    { type: "link", href: "/program/ketahanan-pangan-sekolah", label: "Ketahanan Pangan Sekolah", icon: Leaf },
   ],
 }
 
