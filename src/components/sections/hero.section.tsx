@@ -21,12 +21,12 @@ export default function Hero() {
       </div>
 
       {/* Content Container */}
-      <div className="relative z-10 flex-1 flex flex-col">
+      <div className="relative z-10 flex-1 flex flex-col justify-between py-6 md:py-0">
         {/* Main Content - Left Center */}
-        <div className="flex-1 flex items-center px-6 md:px-16 lg:px-20">
-          <div className="max-w-3xl">
+        <div className="flex-1 flex items-center px-4 sm:px-6 md:px-16 lg:px-20">
+          <div className="max-w-3xl w-full">
             {/* Judul */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight text-white mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold leading-tight text-white mb-4 md:mb-6">
               Selamat Datang di <br />
               <span className="bg-gradient-to-r from-yellow-400 to-yellow-200 bg-clip-text text-transparent">
                 SDN 1 Guno
@@ -34,20 +34,20 @@ export default function Hero() {
             </h1>
 
             {/* Deskripsi */}
-            <p className="text-base sm:text-lg md:text-xl text-gray-200 leading-relaxed mb-8">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-200 leading-relaxed mb-6 md:mb-8">
               Mencetak generasi yang cerdas, berkarakter, dan berprestasi untuk masa
               depan Indonesia yang gemilang.
             </p>
 
             {/* Tombol */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
               <Link
                 href="#visi-misi"
-                className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 font-bold rounded-xl shadow-lg hover:shadow-xl hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform hover:scale-105"
+                className="group inline-flex items-center justify-center gap-2 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-blue-900 text-sm sm:text-base font-bold rounded-lg md:rounded-xl shadow-lg hover:shadow-xl hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 transform hover:scale-105"
               >
                 <span>Visi Misi</span>
                 <svg
-                  className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200"
+                  className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform duration-200"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -63,10 +63,10 @@ export default function Hero() {
 
               <Link
                 href="#contact"
-                className="group inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl font-bold hover:bg-white hover:text-blue-900 hover:border-white transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="group inline-flex items-center justify-center gap-2 px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white text-sm sm:text-base rounded-lg md:rounded-xl font-bold hover:bg-white hover:text-blue-900 hover:border-white transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 <svg
-                  className="w-5 h-5"
+                  className="w-4 h-4 sm:w-5 sm:h-5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -85,7 +85,7 @@ export default function Hero() {
         </div>
 
         {/* Stats - Bottom Center */}
-        <div className="pb-6 md:pb-18 px-6">
+        <div className="pb-4 sm:pb-6 md:pb-10 lg:pb-12 px-4 sm:px-6">
           <div className="w-full flex justify-center">
             <SchoolStatsDisplay />
           </div>

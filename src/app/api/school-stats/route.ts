@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { MongoClient } from "mongodb";
 
 const MONGO_URI = process.env.MONGO_URI!; // simpan di .env.local
