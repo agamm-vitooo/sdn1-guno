@@ -2,6 +2,7 @@
 
 import VisitorsChartsSection from "../../../components/admin/dashboard/chart";
 import ContactSection from "../../../components/admin/dashboard/contact/page";
+import SchoolStatsForm from "../../../components/school-stats.form";
 
 export default function DashboardPage() {
   return (
@@ -11,6 +12,9 @@ export default function DashboardPage() {
 
       {/* Contact di bawah */}
       <ContactSection />
+
+      {/* Form Statistik Sekolah */}
+      <SchoolStatsForm />
     </main>
   );
 }
